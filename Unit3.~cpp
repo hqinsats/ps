@@ -1,0 +1,467 @@
+//---------------------------------------------------------------------------
+#include <string.h>
+
+#include <stdio.h>
+#include <fstream>
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit3.h"
+#include "Unit2.h"
+
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm3 *Form3;
+//---------------------------------------------------------------------------
+__fastcall TForm3::TForm3(TComponent* Owner)
+        : TForm(Owner)
+{
+i=1;
+clickmouse = 0;
+chisotv = 0;
+}
+//---------------------------------------------------------------------------
+//НЕРАБОЧИЙ КУСОК КОДА, Т. К. УДАЛЕНЫ ЭЛЕМЕНТЫ
+void __fastcall TForm3::Image3MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+        SpeedButton1->Font->Color = clBlack;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm3::Image3MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        SpeedButton1->Font->Color = clMaroon;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm3::Image4MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+        SpeedButton2->Font->Color = clBlack;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm3::Image4MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        SpeedButton2->Font->Color = clMaroon;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm3::Image5MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+        SpeedButton3->Font->Color = clBlack;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm3::Image5MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        SpeedButton3->Font->Color = clMaroon;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm3::Timer1Timer(TObject *Sender)
+{
+ //НЕ ТРОГАТЬ НИЧЕГО. РАБОТАЕТ НА Б/У-шных костылях
+ if(i <= 3) //пока счётчик меньше 3
+   {
+    i++; //инкреметир. значение счётчика
+    Label4->Caption = IntToStr(i); //меняем значение в лэйбл3
+    Application->ProcessMessages();//чтоб не зависало во время счёта
+   }
+ if(i == 4) // когда переменная i будет содержать 4
+   {
+   //появятся вариаты ответов
+   SpeedButton1->Visible=true;
+   SpeedButton2->Visible=true;
+   SpeedButton3->Visible=true;
+   //Отключится таймер
+   Timer1->Enabled = false;
+   //обнулятся значения таймера
+   i=1;
+   Label4->Caption="";
+   }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm3::FormActivate(TObject *Sender)
+{
+//ПРИ ЗАПУСКЕ ТРЕТЬЕЙ ФОРМЫ, ПРОИСХОДИТ ЧТЕНИЕ ВАРИАНТОВ ОТВЕТОВ ИЗ ФАЙЛОВ И ЗАПИСЬ НА КНОПКУ
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[0];
+
+TStringList* l2 = new TStringList;
+l2->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l2.txt");
+SpeedButton2->Caption = l2->Strings[0];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[0];
+
+
+   Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+   Timer1->Enabled = true; //включили таймер
+
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm3::SpeedButton1Click(TObject *Sender)
+{
+//ПЕРЕМЕННАЯ ОБЪЯВЛЕНА В UNIT3.H. ОНА ПРЕДНАЗНАЧЕНА ДЛЯ ЛОГИЧЕСКИХ ВЫЧИСЛЕНИЙ
+nasv1=SpeedButton1->Caption;
+
+//СТРУКТУРА: ЕСЛИ В ПЕРЕМЕННОЙ nasv1 ТЕКСТ ИДЕНТИЧЕН С ОТВЕТОМ, ТО ВЫПОЛНЯЕТСЯ ЗАПИСЬ
+//В ПЕРЕМЕННУЮ o1, ИЗМЕНЕНИЕ КАРТИНКИ ДЛЯ СЛЕД. ОТВЕТА, ЧТЕНИЕ ИЗ ФАЙЛА СЛЕД. ОТВЕТЫ
+//НА ВОПРОСЫ
+
+if(nasv1 == "Машина"){
+o1 = "Про таких, как вы, говорят «глубокий человек»: вы не обращаете внимания на мелочи и условности, потому что сразу смотрите в корень проблемы. Аналитический склад ума и внимательность здорово помогают вам в принятии сложных решений, но как раз из-за глобальности мышления вы часто упускаете из виду оттенки и полутона. ";
+Image2->Picture->LoadFromFile("02.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[1];
+
+SpeedButton2->Visible=false; //
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[1];
+
+Label4->Caption = IntToStr(i); //значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+if(nasv1 == "Женщина"){
+o2 = "Это знак того, что скоро всё наладится в вашей жизни. Все мелкие неурядицы исчезнут сами собой, а в крупных делах вам обязательно кто-то поможет. Можете смело начинать новые дела и верить в себя. Побольше бывайте у воды. Сейчас у вашей жизни женская энергетика, вода подпитывает её. ";
+Image2->Picture->LoadFromFile("03.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[2];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[2];
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+
+}
+
+if(nasv1 == "Крокодил"){
+o3 = "Вы очень практичны и трезво оцениваете риски в своей жизни. Вы очень осторожны, что иногда граничит с пессимизмом. Вам стоит меньше зацикливаться на плохом и почаще радоваться хорошему. ";
+Image2->Picture->LoadFromFile("04.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[3];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[3];
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+if(nasv1 == "Старик"){
+o4 = "Вы эмоциональны и умеете сопереживать. При этом вы очень уверены в себе. Иногда вы проявляете излишний перфекционизм, но ведь совершенству нет предела! ";
+Image2->Picture->LoadFromFile("05.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[4];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[4];
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+if(nasv1 == "Колонны"){
+o5 = "Ваше нынешнее состояние души мешает вам достичь желаемого в жизни. Вы не хотите выходить из зоны комфорта, но вам придётся это сделать, если вы хотите добиться успеха. Также вы — мечтатель, часто упускающий из виду мелкие детали. ";
+Image2->Picture->LoadFromFile("06.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[5];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[5];
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+if(nasv1 == "Лица"){
+o6 = " Вы — экстраверт, питающийся энергией окружающего мира. Для вас очень важно находиться в окружении позитивных людей, которые поддерживают вас, а не критикуют.  ";
+Image2->Picture->LoadFromFile("07.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[6];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[6];
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+if(nasv1 == "Череп"){
+o7 = "Вы готовы к новым свершениям и победам. Вместе с тем, вы прекрасно осознаете скоротечность бытия, и знаете, что всему приходит конец. Вы не зацикливаетесь на материальном, для вас скорее важен сам путь, а не результат. Именно по этой причине у вас всё складывается наилучшим образом. Вы многого добьётесь, если не свернёте с этого пути.";
+Form2->Label1->Visible=false;
+Form2->Image2->Visible=false;
+Form2->Image1->Picture->LoadFromFile("zak.jpg");
+Form2->RichEdit1->Visible=true;
+Form2->Label2->Visible=true;
+Form2->RichEdit1->Lines->Text=o1+o2+o3+o4+o5+o6+o7;
+Form2->Caption="Результат";
+
+Form3->Close();
+}
+
+clickmouse++;
+Label5->Caption = IntToStr(clickmouse);
+
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm3::SpeedButton2Click(TObject *Sender)
+{
+nasv2=SpeedButton2->Caption;
+
+if(nasv2 == "Человек"){
+o1 = "У вас отлично развито воображение и интуиция. А ещё вы отлично чувствуете людей, иногда буквально видите насквозь. На любую проблему у вас найдётся неожиданное и творческое решение. Правда, слишком доверяя своему сердцу, вы склонны отключать мозги и витать в облаках. ";
+Image2->Picture->LoadFromFile("02.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[1];
+
+SpeedButton2->Visible=false;
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[1];
+SpeedButton2->Visible=false;
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+
+
+chisotv=2;
+clickmouse++;
+Label5->Caption = IntToStr(clickmouse);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm3::SpeedButton3Click(TObject *Sender)
+{
+nasv3=SpeedButton3->Caption;
+
+if(nasv3 == "Буква"){
+o1 = "Вы любите всё необычное и яркое, что неудивительно, ведь вы сами — очень даже яркий и заметный человек. Правда, люди склонны считать вас немного заносчивыми и поверхностными. Научитесь не спешить и копать не вширь, а вглубь — и тогда вам вообще цены не будет! ";
+Image2->Picture->LoadFromFile("02.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[1];
+
+SpeedButton2->Visible=false;
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[1];
+SpeedButton2->Visible=false;
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+if(nasv3 == "Мужчина"){
+o2 = "Наконец в вашей личной жизни наступает спокойный и гармоничный период. Если у вас уже есть пара и это действительно «ваш» человек, то отношения будут становиться только крепче и благополучнее. Ну а если вы в активном поиске, то скоро вы встретите свою вторую половинку — того человека, с которым вам уготована долгая и счастливая жизнь. Не пропустите его! ";
+Image2->Picture->LoadFromFile("03.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[2];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[2];
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+
+}
+
+if(nasv3 == "Лодка"){
+o3 = "У вас потрясающая внимательность к деталям — вы ничего не упускаете. Вы очень креативны и всегда придумываете уникальные решения для всех проблем.";
+Image2->Picture->LoadFromFile("04.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[3];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[3];
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+if(nasv3 == "Девушка"){
+o4 = "Вы — оптимист, излучающий позитивную энергетику. Несмотря на вашу импульсивность, окружающие вас любят. При этом вы мыслите довольно логично и аналитически.";
+Image2->Picture->LoadFromFile("05.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[4];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[4];
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+if(nasv3 == "Люди"){
+o5 = "Если вы увидели силуэты между колоннами, значит, вы — свободный и общительный человек. Вы часто принимаете чужие слова близко к сердцу и придаёте большое значение поступкам людей.";
+Image2->Picture->LoadFromFile("06.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[5];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[5];
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+if(nasv3 == "Ваза"){
+o6 = "Вы — интроверт, получающий энергию изнутри. Если вы справитесь со своими слабостями, вы сможете многого добиться.";
+Image2->Picture->LoadFromFile("07.jpg");
+
+TStringList* l1 = new TStringList;
+l1->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l1.txt");
+SpeedButton1->Caption = l1->Strings[6];
+
+TStringList* l3 = new TStringList;
+l3->LoadFromFile(ExtractFilePath(ParamStr(0)) + "l3.txt");
+SpeedButton3->Caption = l3->Strings[6];
+
+Label4->Caption = IntToStr(i); //Вывели в метку начальное значение счетчика
+SpeedButton1->Visible=false;
+SpeedButton3->Visible=false;
+Timer2->Enabled = true;
+}
+
+if(nasv3 == "Женщина"){
+o7 = "Женщина, склонившая голову к ногам, символизирует усталость. Возможно, вы запутались и не знаете, что делать дальше. Отдохните, по возможности отложите дела в сторону. Сейчас вы не в лучшей форме. Неплохо бы сменить обстановку хотя бы на пару дней и набраться сил. Вероятно, рядом с вами есть человек, который отнимает вашу энергию. Пересмотрите своё окружение и не бойтесь расставаться с людьми, отношения с которыми уже изжили себя.";
+Form2->Label1->Visible=false;
+Form2->Image2->Visible=false;
+Form2->Image1->Picture->LoadFromFile("zak.jpg");
+
+Form2->RichEdit1->Visible=true;
+Form2->Label2->Visible=true;
+Form2->RichEdit1->Lines->Text=o1+o2+o3+o4+o5+o6+o7;
+Form2->Caption="Результат";
+Form3->Close();
+
+}
+
+chisotv=3;
+clickmouse++;
+Label5->Caption = IntToStr(clickmouse);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm3::Timer2Timer(TObject *Sender)
+{
+if(i <= 3) //пока счётчик меньше 3
+   {
+    i++; //инкреметир. значение счётчика
+    Label4->Caption = IntToStr(i); //меняем значение в лэйбл3
+    Application->ProcessMessages();//чтоб не зависало во время счёта
+   }
+ if(i == 4) // когда переменная i будет содержать 4
+   {
+   //появятся вариаты ответов
+   SpeedButton1->Visible=true;
+   SpeedButton3->Visible=true;
+   //Отключится таймер
+   Timer2->Enabled = false;
+   //обнулятся значения таймера
+   i=1;
+   Label4->Caption="";
+   }
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TForm3::FormCanResize(TObject *Sender, int &NewWidth,
+      int &NewHeight, bool &Resize)
+{
+        Resize = False;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm3::FormCloseQuery(TObject *Sender, bool &CanClose)
+{
+        nasv1=SpeedButton1->Caption;
+        nasv2=SpeedButton2->Caption;
+        nasv3=SpeedButton3->Caption;
+
+        if(nasv3 == "Женщина"&&nasv2 == "Человек"&&nasv1 == "Череп"){
+        CanClose=true;
+        }
+        else{
+        CanClose=false;
+        }
+}
+//---------------------------------------------------------------------------
+
